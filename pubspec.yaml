@@ -1,0 +1,35 @@
+name: quan_ly_khach
+description: "App quản lý khách hàng bất động sản (offline)"
+publish_to: 'none'
+version: 2.3.0+4
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  sqflite: ^2.3.3             # Cơ sở dữ liệu trong máy
+  path: any
+  path_provider: ^2.1.4       # Thư mục lưu ảnh
+  intl: any                   # Ngày giờ, tiền tiếng Việt
+  url_launcher: ^6.2.5        # Gọi điện, Zalo, Facebook
+  flutter_local_notifications: 17.2.4   # Nhắc hẹn
+  timezone: ^0.9.4
+  image_picker: ^1.1.2        # Ảnh dự án
+  excel: ^4.0.6               # Đọc / ghi file Excel
+  file_picker: ^8.1.2         # Chọn file nhập, lưu file
+  share_plus: ^10.1.4         # Gửi file qua Zalo, Email
+  local_auth: ^2.3.0          # Vân tay
+  shared_preferences: ^2.3.2  # Lưu cài đặt
+  crypto: ^3.0.3              # Mã hóa mật khẩu
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

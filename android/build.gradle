@@ -1,0 +1,54 @@
+// Phiên bản Kotlin dùng chung. PHẢI trùng với version của
+// plugin "org.jetbrains.kotlin.android" trong android/settings.gradle.
+// Một số plugin Flutter cũ đọc biến này.
+ext.kotlin_version = '2.1.0'
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+// Cho phép Kotlin đọc các thư viện được biên dịch bằng Kotlin mới hơn
+// (chữa lỗi "Module was compiled with an incompatible version of Kotlin"
+//  mà Flutter báo thành "Your project requires a newer version of the Kotlin Gradle plugin").
+subprojects {
+    tasks.configureEach { task ->
+        if (task.class.name.contains("KotlinCompile") && task.hasProperty("compilerOptions")) {
+            task.compilerOptions.freeCompilerArgs.add("-Xskip-metadata-version-check")
+        }
+    }
+}
+
+// Các thư viện androidx mới yêu cầu compileSdk >= 36.
+// Nâng compileSdk cho mọi plugin Flutter (thư viện con) đang dùng bản thấp hơn.
+// Khối này PHẢI nằm trước khối evaluationDependsOn bên dưới.
+subprojects {
+    afterEvaluate { p ->
+        if (p.plugins.hasPlugin("com.android.library") && p.hasProperty("android")) {
+            def current = p.android.compileSdkVersion
+            def level = 0
+            if (current != null) {
+                def digits = current.toString().replaceAll("[^0-9]", "")
+                level = digits.isEmpty() ? 0 : digits.toInteger()
+            }
+            if (level < 36) {
+                p.android.compileSdkVersion(36)
+            }
+        }
+    }
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
